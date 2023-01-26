@@ -8,37 +8,94 @@
 import SwiftUI
 import CoreData
 
+var itemNumber = 1
+
+var timeFormat: DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "hh:mm a"
+    return formatter
+}
+
+func timeString(date: Date) -> String {
+     let time = timeFormat.string(from: date)
+     return time
+}
+
+extension TimeInterval {
+    func format(using units: NSCalendar.Unit) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = units
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+        return formatter.string(from: self) ?? ""
+    }
+}
+
+struct TimerView: View {
+    @State var interval = TimeInterval()
+    @State var isTimerRunning = false
+    @State var item: Item
+
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        LazyVStack {
+            HStack {
+                Text(interval.format(using: [.hour, .minute, .second]))
+                    .font(Font.system(.largeTitle, design: .monospaced))
+                    .onAppear(perform: {let _ = self.updateTimer})
+                
+                Spacer()
+            }
+            
+            
+            HStack {
+                Text("\(item.name ?? "hi")")
+                
+                Spacer()
+                
+                Text("\(item.timestamp ?? Date(), formatter: itemFormatter)")
+            }
+
+        }
+    }
+    
+    var updateTimer: Timer {
+         Timer.scheduledTimer(withTimeInterval: 1, repeats: true,
+                              block: {_ in
+             self.interval = Date().timeIntervalSince(item.timestamp ?? Date() )
+                               })
+    }
+}
+
+
 struct ContentView: View {
+    @State var date = Date()
+
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
+    
+
     private var items: FetchedResults<Item>
 
     var body: some View {
-        NavigationView {
+        VStack {
+            Text("\(timeString(date: date))")
+                .font(.largeTitle).onAppear(perform: {let _ = self.updateTimer})
+            
             List {
                 ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
+                    TimerView(item: item)
                 }
                 .onDelete(perform: deleteItems)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
+            
+            Button(action: addItem) {
+                Label("Add Item", systemImage: "plus")
             }
-            Text("Select an item")
         }
     }
 
@@ -46,7 +103,9 @@ struct ContentView: View {
         withAnimation {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
-
+            newItem.name = "Item \(itemNumber)"
+            itemNumber += 1
+            
             do {
                 try viewContext.save()
             } catch {
@@ -72,12 +131,20 @@ struct ContentView: View {
             }
         }
     }
+    
+    var updateTimer: Timer {
+         Timer.scheduledTimer(withTimeInterval: 1, repeats: true,
+                              block: {_ in
+                                 self.date = Date()
+                               })
+    }
+
 }
 
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
+    formatter.dateStyle = .none
+    formatter.timeStyle = .short
     return formatter
 }()
 
@@ -86,3 +153,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
+
+
