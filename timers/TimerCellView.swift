@@ -72,10 +72,8 @@ struct TimerView: View {
                 
                 Spacer()
                 
-                Text("\(item.start ?? "")")
-                Text(item.end ?? "" != "" && item.start ?? "" != "" ? "-" : "")
-                Text("\(item.end ?? "")")
-                Text(item.end ?? "" != "" || item.start ?? "" != "" ? "min" : "")
+                Text("\(item.start ?? "") \(item.end ?? "" != "" && item.start ?? "" != "" ? " - " : "") \(item.end ?? "") \(item.end ?? "" != "" || item.start ?? "" != "" ? "min" : "")")
+                
             }
             
             
