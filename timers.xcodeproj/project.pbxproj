@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B72404F22982E4EF008A4CB4 /* TimerCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72404F12982E4EF008A4CB4 /* TimerCellView.swift */; };
+		B72404F42982E7D5008A4CB4 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72404F32982E7D5008A4CB4 /* EditItemView.swift */; };
 		B762FEA02981CE8E00B9E515 /* timersApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B762FE9F2981CE8E00B9E515 /* timersApp.swift */; };
 		B762FEA22981CE8E00B9E515 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B762FEA12981CE8E00B9E515 /* ContentView.swift */; };
 		B762FEA42981CE8E00B9E515 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B762FEA32981CE8E00B9E515 /* Assets.xcassets */; };
@@ -36,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B72404F12982E4EF008A4CB4 /* TimerCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCellView.swift; sourceTree = "<group>"; };
+		B72404F32982E7D5008A4CB4 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
 		B762FE9C2981CE8E00B9E515 /* timers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = timers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B762FE9F2981CE8E00B9E515 /* timersApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timersApp.swift; sourceTree = "<group>"; };
 		B762FEA12981CE8E00B9E515 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -100,6 +104,8 @@
 			children = (
 				B762FE9F2981CE8E00B9E515 /* timersApp.swift */,
 				B762FEA12981CE8E00B9E515 /* ContentView.swift */,
+				B72404F32982E7D5008A4CB4 /* EditItemView.swift */,
+				B72404F12982E4EF008A4CB4 /* TimerCellView.swift */,
 				B762FEA32981CE8E00B9E515 /* Assets.xcassets */,
 				B762FEA82981CE8E00B9E515 /* Persistence.swift */,
 				B762FEAA2981CE8E00B9E515 /* timers.xcdatamodeld */,
@@ -264,9 +270,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B762FEA92981CE8E00B9E515 /* Persistence.swift in Sources */,
+				B72404F22982E4EF008A4CB4 /* TimerCellView.swift in Sources */,
 				B762FEA22981CE8E00B9E515 /* ContentView.swift in Sources */,
 				B762FEA02981CE8E00B9E515 /* timersApp.swift in Sources */,
 				B762FEAC2981CE8E00B9E515 /* timers.xcdatamodeld in Sources */,
+				B72404F42982E7D5008A4CB4 /* EditItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

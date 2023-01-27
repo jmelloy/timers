@@ -10,67 +10,10 @@ import CoreData
 
 var itemNumber = 1
 
-var timeFormat: DateFormatter {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mm a"
-    return formatter
-}
-
-func timeString(date: Date) -> String {
-     let time = timeFormat.string(from: date)
-     return time
-}
-
-extension TimeInterval {
-    func format(using units: NSCalendar.Unit) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = units
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = .pad
-        return formatter.string(from: self) ?? ""
-    }
-}
-
-struct TimerView: View {
-    @State var interval = TimeInterval()
-    @State var isTimerRunning = false
-    @State var item: Item
-
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-    var body: some View {
-        LazyVStack {
-            HStack {
-                Text(interval.format(using: [.hour, .minute, .second]))
-                    .font(Font.system(.largeTitle, design: .monospaced))
-                    .onAppear(perform: {let _ = self.updateTimer})
-                
-                Spacer()
-            }
-            
-            
-            HStack {
-                Text("\(item.name ?? "hi")")
-                
-                Spacer()
-                
-                Text("\(item.timestamp ?? Date(), formatter: itemFormatter)")
-            }
-
-        }
-    }
-    
-    var updateTimer: Timer {
-         Timer.scheduledTimer(withTimeInterval: 1, repeats: true,
-                              block: {_ in
-             self.interval = Date().timeIntervalSince(item.timestamp ?? Date() )
-                               })
-    }
-}
-
 
 struct ContentView: View {
     @State var date = Date()
+    @State var selectedItem: Item? = nil
 
     @Environment(\.managedObjectContext) private var viewContext
 
@@ -88,7 +31,7 @@ struct ContentView: View {
             
             List {
                 ForEach(items) { item in
-                    TimerView(item: item)
+                    TimerView(item: item).onTapGesture {                        self.selectedItem = item}
                 }
                 .onDelete(perform: deleteItems)
             }
@@ -96,6 +39,7 @@ struct ContentView: View {
             Button(action: addItem) {
                 Label("Add Item", systemImage: "plus")
             }
+        }.sheet(item: self.$selectedItem) {item in EditItemView(item: item)
         }
     }
 
@@ -104,6 +48,9 @@ struct ContentView: View {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
             newItem.name = "Item \(itemNumber)"
+            newItem.start = ""
+            newItem.end = ""
+            
             itemNumber += 1
             
             do {
